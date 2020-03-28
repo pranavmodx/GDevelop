@@ -1591,16 +1591,16 @@ class MainFrame extends React.Component<Props, State> {
     });
   };
 
-  setDialogStateByPalette = (key, value) => {
-    switch (key) {
+  setDialogStateByPalette = (command) => {
+    switch (command) {
       case 'About':
         this.setState({
-          aboutDialogOpen: value,
+          aboutDialogOpen: true,
         });
         break;
       case 'Profile':
         this.setState({
-          profileDialogOpen: value,
+          profileDialogOpen: true,
         });
         break;
     }  

@@ -2,23 +2,26 @@ import React, { Component } from 'react';
 import CommandPalette from 'react-command-palette';
 import chrome from '../../node_modules/react-command-palette/themes/chrome-theme';
 import '../../node_modules/react-command-palette/themes/chrome.css';
-import Dialog from '../UI/Dialog';
-
-const commands = [
-  {
-    name: 'About',
-    command() {}
-  },
-  {
-    name: 'Profile',
-    command() {},
-  },
-];
 
 export default class CommandPaletteDialog extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      commands : [
+        {
+          name: 'About',
+        },
+        {
+          name: 'Profile',
+        },
+      ],
+    }
+    // additional commands can be added in as keys for 'commands' state
+  }
+
   setDialogState = (command) => {
-    console.log(command.name);
-    this.props.onSetDialogState('Profile', true);
+    this.props.onSetDialogState(command.name);
   }
 
   render() {
@@ -27,9 +30,9 @@ export default class CommandPaletteDialog extends Component {
         commands={commands}
         theme={chrome}
         open={true}
-        placeholder="Search for any GDevelop features and perform an action"
+        placeholder="Search for any GDevelop feature and perform an action"
         onSelect={command => {
-          this.props.onClose();
+          this.props.onClose(); // For closing palette box
           this.setDialogState(command);
         }}
         closeOnSelect={true}
