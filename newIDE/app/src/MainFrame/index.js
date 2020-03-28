@@ -15,6 +15,7 @@ import LoaderModal from '../UI/LoaderModal';
 import EditorBar from '../UI/EditorBar';
 import CloseConfirmDialog from '../UI/CloseConfirmDialog';
 import ProfileDialog from '../Profile/ProfileDialog';
+import CommandPaletteDialog from '../CommandPalette/index';
 import Window from '../Utils/Window';
 import { showErrorBox } from '../UI/Messages/MessageBox';
 import {
@@ -125,6 +126,7 @@ type State = {|
   preferencesDialogOpen: boolean,
   languageDialogOpen: boolean,
   profileDialogOpen: boolean,
+  commandPaletteDialogOpen: boolean,
   subscriptionDialogOpen: boolean,
   updateStatus: UpdateStatus,
   aboutDialogOpen: boolean,
@@ -181,6 +183,7 @@ class MainFrame extends React.Component<Props, State> {
     preferencesDialogOpen: false,
     languageDialogOpen: false,
     profileDialogOpen: false,
+    commandPaletteDialogOpen: false,
     subscriptionDialogOpen: false,
     updateStatus: { message: '', status: 'unknown' },
     aboutDialogOpen: false,
@@ -1582,6 +1585,12 @@ class MainFrame extends React.Component<Props, State> {
     });
   };
 
+  openCommandPalette = (open: boolean = true) => {
+    this.setState({
+      commandPaletteDialogOpen: open,
+    });
+  };
+
   openSubscription = (open: boolean = true) => {
     this.setState({
       subscriptionDialogOpen: open,
@@ -1752,6 +1761,7 @@ class MainFrame extends React.Component<Props, State> {
       genericDialog,
       projectManagerOpen,
       profileDialogOpen,
+      commandPaletteDialogOpen,
       subscriptionDialogOpen,
       updateStatus,
       aboutDialogOpen,
@@ -1986,6 +1996,12 @@ class MainFrame extends React.Component<Props, State> {
             open
             onClose={() => this.openProfile(false)}
             onChangeSubscription={() => this.openSubscription(true)}
+          />
+        )}
+        {commandPaletteDialogOpen && (
+          <CommandPaletteDialog
+            open
+            onClose={() => this.openCommandPalette(false)}
           />
         )}
         {subscriptionDialogOpen && (

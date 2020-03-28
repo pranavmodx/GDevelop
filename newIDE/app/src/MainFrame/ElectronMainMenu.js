@@ -28,6 +28,7 @@ type MainMenuEvent =
   | 'main-menu-open-preferences'
   | 'main-menu-open-language'
   | 'main-menu-open-profile'
+  | 'main-menu-open-command-palette'
   | 'update-status';
 
 type MenuItemTemplate =
@@ -131,6 +132,10 @@ class ElectronMainMenu extends React.Component<Props, {||}> {
       event => this._editor && this._editor.openProfile()
     );
     ipcRenderer.on(
+      ('main-menu-open-command-palette': MainMenuEvent),
+      event => this._editor && this._editor.openCommandPalette()
+    );
+    ipcRenderer.on(
       ('update-status': MainMenuEvent),
       (event, status) => this._editor && this._editor.setUpdateStatus(status)
     );
@@ -192,6 +197,10 @@ class ElectronMainMenu extends React.Component<Props, {||}> {
         {
           label: i18n._(t`My Profile`),
           onClickSendEvent: 'main-menu-open-profile',
+        },
+        {
+          label: i18n._(t`Command Palette`),
+          onClickSendEvent: 'main-menu-open-command-palette',
         },
         {
           label: i18n._(t`Preferences`),
@@ -320,6 +329,10 @@ class ElectronMainMenu extends React.Component<Props, {||}> {
           {
             label: i18n._(t`My Profile`),
             onClickSendEvent: 'main-menu-open-profile',
+          },
+          {
+            label: i18n._(t`Command Palette`),
+            onClickSendEvent: 'main-menu-open-command-palette',
           },
           {
             label: i18n._(t`Preferences`),
