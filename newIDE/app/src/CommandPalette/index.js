@@ -17,6 +17,14 @@ export default class CommandPaletteDialog extends Component {
           name: 'Profile',
           command() {}
         },
+        {
+          name: 'Preferences',
+          command() {}
+        },
+        {
+          name: 'Language',
+          command() {}
+        },
       ],
     }
     // additional commands can be added in as keys for 'commands' state
@@ -34,8 +42,10 @@ export default class CommandPaletteDialog extends Component {
         open={true}
         placeholder="Search for any GDevelop feature and perform an action"
         onSelect={command => {
-          this.props.onClose(); // For closing palette box
           this.setDialogState(command);
+        }}
+        onRequestClose={() => {
+          this.props.onClose();
         }}
         closeOnSelect={true}
       />
