@@ -15,13 +15,22 @@ const commands = [
 ];
 
 export default class CommandPaletteDialog extends Component {
+  setDialogState = (command) => {
+    console.log(command.name);
+    this.props.onSetDialogState('Profile', true);
+  }
+
   render() {
     return (
       <CommandPalette
         commands={commands}
         theme={chrome}
         open={true}
-        placeholder="Search for any GDevelop features and perform an action" 
+        placeholder="Search for any GDevelop features and perform an action"
+        onSelect={command => {
+          this.setDialogState(command);
+        }}
+        closeOnSelect={true}
       />
     );
   }

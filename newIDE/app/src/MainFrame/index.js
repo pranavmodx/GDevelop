@@ -1591,6 +1591,21 @@ class MainFrame extends React.Component<Props, State> {
     });
   };
 
+  setDialogStateByPalette = (key, value) => {
+    switch (key) {
+      case 'About':
+        this.setState({
+          aboutDialogOpen: value,
+        });
+        break;
+      case 'Profile':
+        this.setState({
+          profileDialogOpen: value,
+        });
+        break;
+    }  
+  }
+
   openSubscription = (open: boolean = true) => {
     this.setState({
       subscriptionDialogOpen: open,
@@ -2002,6 +2017,9 @@ class MainFrame extends React.Component<Props, State> {
           <CommandPaletteDialog
             open
             onClose={() => this.openCommandPalette(false)}
+            onSetDialogState={this.setDialogStateByPalette}
+            aboutDialogState={this.state.aboutDialogOpen}
+            profileDialogState={this.state.profileDialogOpen}
           />
         )}
         {subscriptionDialogOpen && (
