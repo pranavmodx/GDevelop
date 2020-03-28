@@ -1603,6 +1603,16 @@ class MainFrame extends React.Component<Props, State> {
           profileDialogOpen: true,
         });
         break;
+      case 'Preferences':
+        this.setState({
+          preferencesDialogOpen: true,
+        });
+        break;
+      case 'Language':
+        this.setState({
+          languageDialogOpen: true,
+        });
+        break;
     }  
   }
 
@@ -2020,7 +2030,9 @@ class MainFrame extends React.Component<Props, State> {
             onSetDialogState={this.setDialogStateByPalette}
             aboutDialogState={this.state.aboutDialogOpen}
             profileDialogState={this.state.profileDialogOpen}
-          />
+            preferencesDialogState={this.state.preferencesDialogOpen}
+            languageDialogState={this.state.languageDialogOpen}
+            />
         )}
         {subscriptionDialogOpen && (
           <SubscriptionDialog
