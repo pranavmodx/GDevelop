@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import CommandPalette from 'react-command-palette';
 import chrome from '../../node_modules/react-command-palette/themes/chrome-theme';
 import '../../node_modules/react-command-palette/themes/chrome.css';
+import Dialog from '../UI/Dialog';
 
 const commands = [
   {
@@ -28,6 +29,7 @@ export default class CommandPaletteDialog extends Component {
         open={true}
         placeholder="Search for any GDevelop features and perform an action"
         onSelect={command => {
+          this.props.onClose();
           this.setDialogState(command);
         }}
         closeOnSelect={true}
