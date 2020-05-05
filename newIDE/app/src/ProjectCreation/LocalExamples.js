@@ -1,14 +1,13 @@
 // @flow
-import { Trans } from '@lingui/macro';
-import { t } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 import { I18n } from '@lingui/react';
 import { type I18n as I18nType } from '@lingui/core';
 import React, { Component } from 'react';
 import Divider from '@material-ui/core/Divider';
 import LocalFolderPicker from '../UI/LocalFolderPicker';
-import Text from '../UI/Text';
 import { sendNewGameCreated } from '../Utils/Analytics/EventSender';
 import { Column, Line } from '../UI/Grid';
+import Text from '../UI/Text';
 import { findExamples } from './LocalExamplesFinder';
 import optionalRequire from '../Utils/OptionalRequire.js';
 import { findEmptyPath } from './LocalPathFinder';
@@ -111,6 +110,17 @@ export default class LocalExamples extends Component<Props, State> {
       <I18n>
         {({ i18n }) => (
           <Column noMargin>
+            <Line expand>
+              <Column expand>
+                <LocalFolderPicker
+                  fullWidth
+                  value={this.state.outputPath}
+                  onChange={this._handleChangePath}
+                  type="create-game"
+                />
+              </Column>
+            </Line>
+            <Divider />
             <Line>
               <Column>
                 <Text>
@@ -125,17 +135,6 @@ export default class LocalExamples extends Component<Props, State> {
                   this.createFromExample(i18n, exampleName)
                 }
               />
-            </Line>
-            <Divider />
-            <Line expand>
-              <Column expand>
-                <LocalFolderPicker
-                  fullWidth
-                  value={this.state.outputPath}
-                  onChange={this._handleChangePath}
-                  type="create-game"
-                />
-              </Column>
             </Line>
           </Column>
         )}

@@ -67,7 +67,7 @@ import {
 import PreferencesContext from '../MainFrame/Preferences/PreferencesContext';
 import EventsFunctionExtractorDialog from './EventsFunctionExtractor/EventsFunctionExtractorDialog';
 import { createNewInstructionForEventsFunction } from './EventsFunctionExtractor';
-import { type EventsScope } from './EventsScope.flow';
+import { type EventsScope } from '../InstructionOrExpression/EventsScope.flow';
 import {
   pasteEventsFromClipboardInSelection,
   copySelectionToClipboard,
@@ -80,6 +80,7 @@ import {
 import InfoBar from '../UI/Messages/InfoBar';
 import { ScreenTypeMeasurer } from '../UI/Reponsive/ScreenTypeMeasurer';
 import { ResponsiveWindowMeasurer } from '../UI/Reponsive/ResponsiveWindowMeasurer';
+import { type UnsavedChanges } from '../MainFrame/UnsavedChangesContext';
 import { type PreviewButtonSettings } from '../MainFrame/Toolbar/PreviewButtons';
 const gd = global.gd;
 
@@ -109,6 +110,7 @@ type Props = {|
     extensionName: string,
     eventsFunction: gdEventsFunction
   ) => void,
+  unsavedChanges?: UnsavedChanges,
 |};
 type State = {|
   history: HistoryState,
@@ -175,6 +177,7 @@ export default class EventsSheet extends React.Component<Props, State> {
       onCut: () => this.cutSelection(),
       onPaste: () => this.pasteEventsOrInstructions(),
       onSearch: () => this._toggleSearchPanel(),
+      onEscape: () => this._closeSearchPanel(),
       onUndo: () => this.undo(),
       onRedo: () => this.redo(),
     },
@@ -221,6 +224,12 @@ export default class EventsSheet extends React.Component<Props, State> {
 
   componentDidMount() {
     this.setState({ allEventsMetadata: enumerateEventsMetadata() });
+  }
+
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (this.state.history !== prevState.history)
+      if (this.props.unsavedChanges)
+        this.props.unsavedChanges.triggerUnsavedChanges();
   }
 
   updateToolbar() {
@@ -279,6 +288,10 @@ export default class EventsSheet extends React.Component<Props, State> {
         }
       }
     );
+  };
+
+  _closeSearchPanel = () => {
+    this.setState({ showSearchPanel: false });
   };
 
   addSubEvents = () => {
@@ -710,6 +723,7 @@ export default class EventsSheet extends React.Component<Props, State> {
         if (cb) cb();
       }
     );
+    if (this._searchPanel) this._searchPanel.markSearchResultsDirty();
   };
 
   undo = () => {
@@ -723,7 +737,11 @@ export default class EventsSheet extends React.Component<Props, State> {
     // any re-render that could use a deleted/invalid event.
     if (this._eventsTree) this._eventsTree.forceEventsUpdate();
 
-    this.setState({ history: newHistory }, () => this.updateToolbar());
+    // /!\ Also clear selection, that can contain reference to invalid events or
+    // events not shown on screen.
+    this.setState({ history: newHistory, selection: clearSelection() }, () =>
+      this.updateToolbar()
+    );
   };
 
   redo = () => {
@@ -737,7 +755,11 @@ export default class EventsSheet extends React.Component<Props, State> {
     // any re-render that could use a deleted/invalid event.
     if (this._eventsTree) this._eventsTree.forceEventsUpdate();
 
-    this.setState({ history: newHistory }, () => this.updateToolbar());
+    // /!\ Also clear selection, that can contain reference to invalid events or
+    // events not shown on screen.
+    this.setState({ history: newHistory, selection: clearSelection() }, () =>
+      this.updateToolbar()
+    );
   };
 
   _openEventsContextAnalyzer = () => {
@@ -1116,6 +1138,8 @@ export default class EventsSheet extends React.Component<Props, State> {
                             this.setState({
                               inlineEditingChangesMade: true,
                             });
+                            if (this._searchPanel)
+                              this._searchPanel.markSearchResultsDirty();
                           }}
                           resourceSources={this.props.resourceSources}
                           onChooseResource={this.props.onChooseResource}
